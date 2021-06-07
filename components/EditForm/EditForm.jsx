@@ -24,7 +24,7 @@ export default function EditForm() {
                         type="text"
                         name="company_website"
                         id="company_website"
-                        className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                        className="focus:ring-blue-500 focus:border-blue-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
                         placeholder="www.example.com"
                       />
                     </div>
@@ -40,7 +40,7 @@ export default function EditForm() {
                       id="about"
                       name="about"
                       rows={3}
-                      className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                      className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                       placeholder="you@example.com"
                       defaultValue={''}
                     />
@@ -58,7 +58,7 @@ export default function EditForm() {
                     </span>
                     <button
                       type="button"
-                      className="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                       Change
                     </button>
@@ -86,7 +86,7 @@ export default function EditForm() {
                       <div className="flex text-sm text-gray-600">
                         <label
                           htmlFor="file-upload"
-                          className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                          className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
                         >
                           <span>Upload a file</span>
                           <input id="file-upload" name="file-upload" type="file" className="sr-only" />
@@ -120,7 +120,7 @@ export default function EditForm() {
                       name="first_name"
                       id="first_name"
                       autoComplete="given-name"
-                      className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
   
@@ -133,7 +133,7 @@ export default function EditForm() {
                       name="last_name"
                       id="last_name"
                       autoComplete="family-name"
-                      className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
   
@@ -146,7 +146,7 @@ export default function EditForm() {
                       name="email_address"
                       id="email_address"
                       autoComplete="email"
-                      className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
   
@@ -158,7 +158,7 @@ export default function EditForm() {
                       id="country"
                       name="country"
                       autoComplete="country"
-                      className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     >
                       <option>United States</option>
                       <option>Canada</option>
@@ -175,7 +175,7 @@ export default function EditForm() {
                       name="street_address"
                       id="street_address"
                       autoComplete="street-address"
-                      className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
   
@@ -187,7 +187,7 @@ export default function EditForm() {
                       type="text"
                       name="city"
                       id="city"
-                      className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
   
@@ -199,7 +199,7 @@ export default function EditForm() {
                       type="text"
                       name="state"
                       id="state"
-                      className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
   
@@ -212,7 +212,7 @@ export default function EditForm() {
                       name="postal_code"
                       id="postal_code"
                       autoComplete="postal-code"
-                      className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
                 </div>
@@ -238,7 +238,7 @@ export default function EditForm() {
                           id="comments"
                           name="comments"
                           type="checkbox"
-                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                          className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
                         />
                       </div>
                       <div className="ml-3 text-sm">
@@ -254,7 +254,7 @@ export default function EditForm() {
                           id="candidates"
                           name="candidates"
                           type="checkbox"
-                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                          className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
                         />
                       </div>
                       <div className="ml-3 text-sm">
@@ -270,7 +270,7 @@ export default function EditForm() {
                           id="offers"
                           name="offers"
                           type="checkbox"
-                          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                          className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
                         />
                       </div>
                       <div className="ml-3 text-sm">
@@ -293,7 +293,7 @@ export default function EditForm() {
                         id="push_everything"
                         name="push_notifications"
                         type="radio"
-                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                        className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"
                       />
                       <label htmlFor="push_everything" className="ml-3 block text-sm font-medium text-gray-700">
                         Everything
@@ -304,7 +304,7 @@ export default function EditForm() {
                         id="push_email"
                         name="push_notifications"
                         type="radio"
-                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                        className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"
                       />
                       <label htmlFor="push_email" className="ml-3 block text-sm font-medium text-gray-700">
                         Same as email
@@ -315,7 +315,7 @@ export default function EditForm() {
                         id="push_nothing"
                         name="push_notifications"
                         type="radio"
-                        className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                        className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"
                       />
                       <label htmlFor="push_nothing" className="ml-3 block text-sm font-medium text-gray-700">
                         No push notifications
@@ -331,13 +331,13 @@ export default function EditForm() {
         <div className="flex justify-end">
           <button
             type="button"
-            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Save
           </button>

@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client";
 import { gql } from "graphql-tag";
 import useForm from "../../lib/useForm";
 import formatPhone from "../../lib/formatPhone";
+import {ACCOUNT_QUERY} from '../../pages/account'
 
 const SEND_TEXT_MESSAGE_MUTATION = gql`
   mutation SEND_TEXT_MESSAGE_MUTATION($accountId: ID!, $textMessage: String!) {
@@ -33,13 +34,14 @@ export default function SendMessageForm({
       textMessage: inputs.message,
       accountId: accountId,
     },
+    refetchQueries: [{ query: ACCOUNT_QUERY }],
   });
 
   // need to send phone number + message to api
   const submit = (e) => {
     e.preventDefault();
     sendMessage();
-    setOpen(false)
+    setOpen(false);
   };
 
   return (
@@ -47,7 +49,7 @@ export default function SendMessageForm({
       <button
         disabled={!needsTexted}
         onClick={() => setOpen(true)}
-        className="text-indigo-600 hover:text-indigo-900 disabled:cursor-not-allowed disabled:opacity-30"
+        className="text-blue-600 hover:text-blue-900 disabled:cursor-not-allowed disabled:opacity-30"
       >
         {children}
       </button>
@@ -90,7 +92,7 @@ export default function SendMessageForm({
                             <div className="ml-3 h-7 flex items-center">
                               <button
                                 type="button"
-                                className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 onClick={() => setOpen(false)}
                               >
                                 <span className="sr-only">Close panel</span>
@@ -114,7 +116,7 @@ export default function SendMessageForm({
                                 name="message"
                                 required
                                 rows={4}
-                                className="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                                className="block w-full shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                                 value={inputs.message}
                                 onChange={handleChange}
                               />
@@ -126,14 +128,14 @@ export default function SendMessageForm({
                       <div className="flex-shrink-0 px-4 py-4 flex justify-end">
                         <button
                           type="button"
-                          className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                           onClick={() => setOpen(false)}
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
-                          className="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Send
                         </button>

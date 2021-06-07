@@ -1,5 +1,6 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { CashIcon, UserIcon, ChatIcon } from "@heroicons/react/solid";
+import { CashIcon, ChatIcon } from "@heroicons/react/solid";
+import dayjs from "dayjs";
+import formatMoney from "../../lib/formatMoney";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -10,9 +11,8 @@ export default function Timeline({ events }) {
     <div className="flow-root">
       <ul className="-mb-8">
         {events.map((event, eventIdx) => {
-          let eventDate = new Date(event.timestamp);
-          let day = eventDate.getDate();
-          let month = eventDate.getMonth();
+          const eventDateTime = new Date(event.timestamp);
+          const formattedDate = dayjs(event.timestamp).format("MMM D");
           return (
             <li key={`${event.timestamp}-${eventIdx}`}>
               <div className="relative pb-8">
@@ -50,7 +50,7 @@ export default function Timeline({ events }) {
                           <strong className="text-gray-900 block">
                             Transaction
                           </strong>
-                          {event.amount}
+                          {formatMoney(event.amount)}
                         </p>
                       ) : (
                         <p className="text-sm text-gray-500">
@@ -62,9 +62,7 @@ export default function Timeline({ events }) {
                       )}
                     </div>
                     <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                      <time dateTime={eventDate}>
-                        {month} {day}
-                      </time>
+                      <time dateTime={eventDateTime}>{formattedDate}</time>
                     </div>
                   </div>
                 </div>

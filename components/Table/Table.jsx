@@ -1,5 +1,6 @@
-import { useQuery } from "@apollo/client";
 import { useState, useEffect } from "react";
+import Link from 'next/link'
+import { useQuery } from "@apollo/client";
 import SendMessageForm from "../SendMessageForm/SendMessageForm";
 import { gql } from "graphql-tag";
 import formatPhone from "../../lib/formatPhone";
@@ -81,7 +82,7 @@ export default function Table({ all }) {
                     className={accountIdx % 2 === 0 ? "bg-white" : "bg-gray-50"}
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {account.name}
+                      <Link href={'/account/'}>{account.name}</Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <span
