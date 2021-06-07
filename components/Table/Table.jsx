@@ -1,57 +1,42 @@
-import Link from "next/link";
+import { useQuery } from "@apollo/client";
+import { useState, useEffect } from "react";
+import SendMessageForm from "../SendMessageForm/SendMessageForm";
+import { gql } from "graphql-tag";
+import formatPhone from "../../lib/formatPhone";
+import formatMoney from "../../lib/formatMoney";
 
-const people = [
-  {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "jane.cooper@example.com",
-  },
-  {
-    name: "Cody Fisher",
-    title: "Product Directives Officer",
-    role: "Owner",
-    email: "cody.fisher@example.com",
-  },
-  {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "jane.cooper@example.com",
-  },
-  {
-    name: "Cody Fisher",
-    title: "Product Directives Officer",
-    role: "Owner",
-    email: "cody.fisher@example.com",
-  },
-  {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "jane.cooper@example.com",
-  },
-  {
-    name: "Cody Fisher",
-    title: "Product Directives Officer",
-    role: "Owner",
-    email: "cody.fisher@example.com",
-  },
-  {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "jane.cooper@example.com",
-  },
-  {
-    name: "Cody Fisher",
-    title: "Product Directives Officer",
-    role: "Owner",
-    email: "cody.fisher@example.com",
-  },
-];
+export const ALL_ACCOUNTS_QUERY = gql`
+  query ALL_ACCOUNTS_QUERY {
+    allAccounts(sortBy: [name_ASC]) {
+      id
+      name
+      phone
+      balance
+      needsTexted
+      dateLastTextSent
+    }
+  }
+`;
 
-export default function Table() {
+export default function Table({ all }) {
+  const [showAll, setShowAll] = useState();
+  const { data, error, loading } = useQuery(ALL_ACCOUNTS_QUERY);
+  let accounts;
+
+  useEffect(() => {
+    setShowAll(all);
+  }, [all]);
+
+  if (loading) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
+  if (showAll) {
+    accounts = data?.allAccounts;
+  } else {
+    accounts = data?.allAccounts.filter((account) => account.needsTexted);
+  }
+
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -64,57 +49,74 @@ export default function Table() {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Name
+                    Family Name
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Title
+                    Balance
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Email
+                    Phone
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Status
+                    Last Messaged
                   </th>
                   <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Edit</span>
+                    <span className="sr-only">Message</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {people.map((person, personIdx) => (
+                {accounts.map((account, accountIdx) => (
                   <tr
-                    key={person.email}
-                    className={personIdx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                    key={`${account.name}-${accountIdx}`}
+                    className={accountIdx % 2 === 0 ? "bg-white" : "bg-gray-50"}
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {person.name}
+                      {account.name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {person.title}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {person.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        {person.role}
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${
+                        account.balance < 0
+                          ? "bg-red-100 text-red-800"
+                          : "bg-green-100 text-green-800"
+                      }
+                      `}
+                      >
+                        {formatMoney(account.balance)}
                       </span>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {formatPhone(account.phone)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {account.dateLastTextSent === "—"
+                        ? "—"
+                        : new Date(account.dateLastTextSent).toDateString()}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Link href="/edit/">
-                        <a className="text-indigo-600 hover:text-indigo-900">
-                          Edit
-                        </a>
-                      </Link>
+                      {account.phone && (
+                        <SendMessageForm
+                          family={account.name}
+                          phone={account.phone}
+                          dateLastTextSent={account.dateLastTextSent}
+                          initialMessage={"hello world"}
+                          accountId={account.id}
+                          needsTexted={account.needsTexted}
+                        >
+                          Message
+                        </SendMessageForm>
+                      )}
                     </td>
                   </tr>
                 ))}

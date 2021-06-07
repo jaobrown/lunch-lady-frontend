@@ -8,15 +8,15 @@ import NextNprogress from "nextjs-progressbar";
 function MyApp({ Component, pageProps, apollo }) {
   return (
     <ApolloProvider client={apollo}>
-      <NextNprogress
-        color="#5046e4"
-        startPosition={0.3}
-        stopDelayMs={200}
-        height="2"
-      />
-      <Page>
-        <Component {...pageProps} />
-      </Page>
+        <NextNprogress
+          color="#5046e4"
+          startPosition={0.3}
+          stopDelayMs={200}
+          height="2"
+        />
+        <Page>
+          <Component {...pageProps} />
+        </Page>
     </ApolloProvider>
   );
 }
