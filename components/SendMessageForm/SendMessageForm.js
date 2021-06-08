@@ -5,7 +5,7 @@ import { useMutation } from "@apollo/client";
 import { gql } from "graphql-tag";
 import useForm from "../../lib/useForm";
 import formatPhone from "../../lib/formatPhone";
-import { ACCOUNT_QUERY } from "../../pages/account";
+import { ACCOUNT_QUERY } from "../Account/Account";
 
 const SEND_TEXT_MESSAGE_MUTATION = gql`
   mutation SEND_TEXT_MESSAGE_MUTATION($accountId: ID!, $textMessage: String!) {

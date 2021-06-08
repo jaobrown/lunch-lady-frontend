@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { useState, Fragment } from "react";
 import Link from "next/link";
 import gql from "graphql-tag";
 import { useMutation, useQuery } from "@apollo/client";
@@ -7,7 +7,13 @@ import formatMoney from "../../lib/formatMoney";
 import formatPhone from "../../lib/formatPhone";
 import SendMessageForm from "../SendMessageForm/SendMessageForm";
 import dayjs from "dayjs";
-import { InformationCircleIcon, PencilAltIcon } from "@heroicons/react/outline";
+import {
+  InformationCircleIcon,
+  PencilAltIcon,
+  QuestionMarkCircleIcon,
+  PencilIcon,
+  XIcon,
+} from "@heroicons/react/outline";
 import useForm from "../../lib/useForm";
 
 export const ACCOUNT_QUERY = gql`
@@ -19,11 +25,13 @@ export const ACCOUNT_QUERY = gql`
       phone
       dateLastTextSent
       timeline {
+        id
         textMessage
         amount
         timestamp
       }
       notes {
+        id
         content
         timestamp
         id
@@ -43,6 +51,8 @@ export const CREATE_NOTE_MUTATION = gql`
 `;
 
 export default function Account({ id }) {
+  const [editing, setEditing] = useState(false);
+
   const { data, error, loading } = useQuery(ACCOUNT_QUERY, {
     variables: {
       id,
@@ -68,51 +78,29 @@ export default function Account({ id }) {
     clear();
   };
 
-  if (loading) return "Loading...";
-
   if (error) return "An error has occurred: " + error.message;
 
   return (
     <Fragment>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
         <div className="flex items-center space-x-5">
-          {/* <div className="flex-shrink-0">
-            <div className="relative">
-              <img
-                className="h-16 w-16 rounded-full"
-                src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
-                alt=""
-              />
-              <span
-                className="absolute inset-0 shadow-inner rounded-full"
-                aria-hidden="true"
-              />
-            </div>
-          </div> */}
           <div>
-            <Link href={"/"}>Back</Link>
+            <Link href={"/"}>&larr; Back</Link>
             <h1 className="text-2xl font-bold text-gray-900">
-              {data.Account.name}
+              {loading ? <p>loading...</p> : data.Account.name}
             </h1>
-            {/* <p className="text-sm font-medium text-gray-500">
-              Applied for{" "}
-              <a href="#" className="text-gray-900">
-                Front End Developer
-              </a>{" "}
-              on <time dateTime="2020-08-25">August 25, 2020</time>
-            </p> */}
           </div>
         </div>
         <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
           <SendMessageForm
-            family={data.Account.name}
-            phone={data.Account.phone}
-            dateLastTextSent={dayjs(data.Account.dateLastTextSent).format(
-              "MMM DD"
-            )}
+            family={data?.Account.name}
+            phone={data?.Account.phone}
+            dateLastTextSent={
+              dayjs(data?.Account.dateLastTextSent).format("MMM DD") || "—"
+            }
             initialMessage={"hello world"}
-            accountId={data.Account.id}
-            needsTexted={true}
+            accountId={data?.Account.id}
+            needsTexted={data?.Account.phone ? true : false}
           >
             <span className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
               Message
@@ -133,7 +121,7 @@ export default function Account({ id }) {
                   Account Information
                 </h2>
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                  Personal details and balance info.
+                  Contact details and balance info.
                 </p>
               </div>
               <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -143,13 +131,21 @@ export default function Account({ id }) {
                       Current Balance
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900">
-                      {formatMoney(data.Account.balance)}
+                      {loading ? (
+                        <p>loading...</p>
+                      ) : (
+                        formatMoney(data.Account.balance)
+                      )}
                     </dd>
                   </div>
                   <div className="sm:col-span-1">
                     <dt className="text-sm font-medium text-gray-500">Phone</dt>
                     <dd className="mt-1 text-sm text-gray-900">
-                      {formatPhone(data.Account.phone)}
+                      {loading ? (
+                        <p>loading...</p>
+                      ) : (
+                        formatPhone(data.Account.phone)
+                      )}
                     </dd>
                   </div>
                 </dl>
@@ -171,48 +167,47 @@ export default function Account({ id }) {
                 </div>
                 <div className="px-4 py-6 sm:px-6">
                   <ul className="space-y-8">
-                    {data.Account.notes.map((note) => (
-                      <li key={note.id}>
-                        <div className="flex space-x-3">
-                          <div className="flex-shrink-0">
-                            {/* <img
-                            className="h-10 w-10 rounded-full"
-                            src={`https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixqx=sgpmfURmTW&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80`}
-                            alt=""
-                          /> */}
-                            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                              <InformationCircleIcon className="h-6 w-6 text-white" />
+                    {loading ? (
+                      <p>loading...</p>
+                    ) : data.Account.notes.length ? (
+                      data.Account.notes.map((note) => (
+                        <li key={note.id}>
+                          <div className="flex space-x-3">
+                            <div className="flex-shrink-0">
+                              <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                <InformationCircleIcon className="h-6 w-6 text-white" />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-sm">
+                                <a
+                                  href="#"
+                                  className="font-medium text-gray-900"
+                                >
+                                  Lunch Lady
+                                </a>
+                              </div>
+                              <div className="mt-1 text-sm text-gray-700">
+                                <p>{note.content}</p>
+                              </div>
+                              <div className="mt-2 text-sm space-x-2">
+                                <span className="text-gray-500 font-medium">
+                                  {dayjs(note.timestamp).format("MMM DD")}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                          <div>
-                            <div className="text-sm">
-                              <a href="#" className="font-medium text-gray-900">
-                                Lunch Lady
-                              </a>
-                            </div>
-                            <div className="mt-1 text-sm text-gray-700">
-                              <p>{note.content}</p>
-                            </div>
-                            <div className="mt-2 text-sm space-x-2">
-                              <span className="text-gray-500 font-medium">
-                                {dayjs(note.timestamp).format("MMM DD")}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
+                        </li>
+                      ))
+                    ) : (
+                      <p>Nothing yet 🙂</p>
+                    )}
                   </ul>
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-6 sm:px-6">
                 <div className="flex space-x-3">
                   <div className="flex-shrink-0">
-                    {/* <img
-                      className="h-10 w-10 rounded-full"
-                      src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixqx=sgpmfURmTW&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    /> */}
                     <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
                       <PencilAltIcon className="h-6 w-6 text-white" />
                     </div>
@@ -234,16 +229,13 @@ export default function Account({ id }) {
                         />
                       </div>
                       <div className="mt-3 flex items-center justify-between">
-                        {/* <a
-                          href="#"
-                          className="group inline-flex items-start text-sm space-x-2 text-gray-500 hover:text-gray-900"
-                        >
+                        <div className="group inline-flex items-start text-sm space-x-2 text-gray-500 hover:text-gray-900">
                           <QuestionMarkCircleIcon
                             className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                             aria-hidden="true"
                           />
-                          <span>Some HTML is okay.</span>
-                        </a> */}
+                          <span>These are just notes for you.</span>
+                        </div>
                         <button
                           type="submit"
                           className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -264,25 +256,39 @@ export default function Account({ id }) {
           className="lg:col-start-3 lg:col-span-1"
         >
           <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
-            <h2
-              id="timeline-title"
-              className="text-lg font-medium text-gray-900"
-            >
-              Timeline
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2
+                id="timeline-title"
+                className="text-lg font-medium text-gray-900"
+              >
+                Timeline
+              </h2>
+              <div className="group">
+                <button
+                  onClick={() => setEditing(() => !editing)}
+                  className="group-hover:bg-gray-100 h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white -mr-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  {editing ? (
+                    <XIcon className="h-5 w-5 text-gray-300 group-hover:text-gray-400" />
+                  ) : (
+                    <PencilIcon className="h-5 w-5 text-gray-300 group-hover:text-gray-400" />
+                  )}
+                </button>
+              </div>
+            </div>
 
             {/* Activity Feed */}
             <div className="mt-6 lg:max-h-96 lg:overflow-y-scroll">
-              <Timeline events={data.Account.timeline} />
+              {loading ? (
+                <p>loading...</p>
+              ) : (
+                <Timeline
+                  events={data.Account.timeline}
+                  editing={editing}
+                  accountId={id}
+                />
+              )}
             </div>
-            {/* <div className="mt-6 flex flex-col justify-stretch">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Advance to offer
-              </button>
-            </div> */}
           </div>
         </section>
       </div>

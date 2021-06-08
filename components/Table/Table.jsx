@@ -76,9 +76,11 @@ export default function Table({ all }) {
               </thead>
               <tbody>
                 {loading && (
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 animate-pulse">
-                    Loading Accounts...
-                  </td>
+                  <tr className="">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 animate-pulse">
+                      Loading Accounts...
+                    </td>
+                  </tr>
                 )}
                 {data &&
                   accounts.map((account, accountIdx) => (
@@ -89,7 +91,9 @@ export default function Table({ all }) {
                       }
                     >
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <Link href={"/account/"}>{account.name}</Link>
+                        <Link href={`/account/${account.id}`}>
+                          {account.name}
+                        </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span
