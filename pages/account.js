@@ -1,7 +1,7 @@
 import { Fragment } from "react";
-import Link from 'next/link'
+import Link from "next/link";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import Timeline from "../components/Timeline/Timeline";
 import formatMoney from "../lib/formatMoney";
@@ -9,6 +9,7 @@ import formatPhone from "../lib/formatPhone";
 import SendMessageForm from "../components/SendMessageForm/SendMessageForm";
 import dayjs from "dayjs";
 import { InformationCircleIcon, PencilAltIcon } from "@heroicons/react/outline";
+import useForm from "../lib/useForm";
 
 export const ACCOUNT_QUERY = gql`
   query ACCOUNT_QUERY {
@@ -23,12 +24,46 @@ export const ACCOUNT_QUERY = gql`
         amount
         timestamp
       }
+      notes {
+        content
+        timestamp
+        id
+      }
+    }
+  }
+`;
+
+export const CREATE_NOTE_MUTATION = gql`
+  mutation CREATE_NOTE_MUTATION($content: String!, $accountId: ID!) {
+    createNote(
+      data: { content: $content, account: { connect: { id: $accountId } } }
+    ) {
+      id
     }
   }
 `;
 
 export default function Account() {
   const { data, error, loading } = useQuery(ACCOUNT_QUERY);
+
+  const { inputs, handleChange, clear } = useForm({
+    note: "",
+  });
+
+  const [createNote] = useMutation(CREATE_NOTE_MUTATION, {
+    variables: {
+      content: inputs.note,
+      accountId: data?.Account?.id,
+    },
+    refetchQueries: [{ query: ACCOUNT_QUERY }],
+  });
+
+  // need to send phone number + message to api
+  const submit = (e) => {
+    e.preventDefault();
+    createNote();
+    clear();
+  };
 
   if (loading) return "Loading...";
 
@@ -52,9 +87,7 @@ export default function Account() {
             </div>
           </div> */}
           <div>
-            <Link href={'/'}>
-              Back
-            </Link>
+            <Link href={"/"}>Back</Link>
             <h1 className="text-2xl font-bold text-gray-900">
               {data.Account.name}
             </h1>
@@ -135,39 +168,37 @@ export default function Account() {
                 </div>
                 <div className="px-4 py-6 sm:px-6">
                   <ul className="space-y-8">
-                    <li>
-                      <div className="flex space-x-3">
-                        <div className="flex-shrink-0">
-                          {/* <img
+                    {data.Account.notes.map((note) => (
+                      <li key={note.id}>
+                        <div className="flex space-x-3">
+                          <div className="flex-shrink-0">
+                            {/* <img
                             className="h-10 w-10 rounded-full"
                             src={`https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixqx=sgpmfURmTW&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80`}
                             alt=""
                           /> */}
-                          <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                            <InformationCircleIcon className="h-6 w-6 text-white" />
+                            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                              <InformationCircleIcon className="h-6 w-6 text-white" />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm">
+                              <a href="#" className="font-medium text-gray-900">
+                                Lunch Lady
+                              </a>
+                            </div>
+                            <div className="mt-1 text-sm text-gray-700">
+                              <p>{note.content}</p>
+                            </div>
+                            <div className="mt-2 text-sm space-x-2">
+                              <span className="text-gray-500 font-medium">
+                                {dayjs(note.timestamp).format("MMM DD")}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-sm">
-                            <a href="#" className="font-medium text-gray-900">
-                              Lunch Lady
-                            </a>
-                          </div>
-                          <div className="mt-1 text-sm text-gray-700">
-                            <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit, sed do eiusmod tempor incididunt ut labore
-                              et dolore magna aliqua.
-                            </p>
-                          </div>
-                          <div className="mt-2 text-sm space-x-2">
-                            <span className="text-gray-500 font-medium">
-                              4d ago
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -184,18 +215,19 @@ export default function Account() {
                     </div>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <form action="#">
+                    <form onSubmit={submit}>
                       <div>
-                        <label htmlFor="comment" className="sr-only">
+                        <label htmlFor="note" className="sr-only">
                           About
                         </label>
                         <textarea
-                          id="comment"
-                          name="comment"
+                          id="note"
+                          name="note"
                           rows={3}
                           className="shadow-sm block w-full focus:ring-blue-500 focus:border-blue-500 sm:text-sm border border-gray-300 rounded-md"
                           placeholder="Add a note"
-                          defaultValue={""}
+                          value={inputs.note}
+                          onChange={handleChange}
                         />
                       </div>
                       <div className="mt-3 flex items-center justify-between">

@@ -9,10 +9,10 @@ function MyApp({ Component, pageProps, apollo }) {
   return (
     <ApolloProvider client={apollo}>
         <NextNprogress
-          color="#5046e4"
+          color="#2463eb"
           startPosition={0.3}
           stopDelayMs={200}
-          height="2"
+          height="3"
         />
         <Page>
           <Component {...pageProps} />
