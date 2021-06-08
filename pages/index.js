@@ -7,7 +7,7 @@ function classNames(...classes) {
 }
 
 export default function Home() {
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   return (
     <Fragment>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex justify-between">

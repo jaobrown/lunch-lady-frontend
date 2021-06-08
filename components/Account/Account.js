@@ -2,13 +2,13 @@ import { Fragment } from "react";
 import Link from "next/link";
 import gql from "graphql-tag";
 import { useMutation, useQuery } from "@apollo/client";
-import Timeline from "../components/Timeline/Timeline";
-import formatMoney from "../lib/formatMoney";
-import formatPhone from "../lib/formatPhone";
-import SendMessageForm from "../components/SendMessageForm/SendMessageForm";
+import Timeline from "../Timeline/Timeline";
+import formatMoney from "../../lib/formatMoney";
+import formatPhone from "../../lib/formatPhone";
+import SendMessageForm from "../SendMessageForm/SendMessageForm";
 import dayjs from "dayjs";
 import { InformationCircleIcon, PencilAltIcon } from "@heroicons/react/outline";
-import useForm from "../lib/useForm";
+import useForm from "../../lib/useForm";
 
 export const ACCOUNT_QUERY = gql`
   query ACCOUNT_QUERY($id: ID!) {
@@ -45,7 +45,7 @@ export const CREATE_NOTE_MUTATION = gql`
 export default function Account({ id }) {
   const { data, error, loading } = useQuery(ACCOUNT_QUERY, {
     variables: {
-      id: id,
+      id,
     },
   });
 
@@ -58,7 +58,7 @@ export default function Account({ id }) {
       content: inputs.note,
       accountId: data?.Account?.id,
     },
-    refetchQueries: [{ query: ACCOUNT_QUERY }],
+    refetchQueries: [{ query: ACCOUNT_QUERY, variables: { id } }],
   });
 
   // need to send phone number + message to api

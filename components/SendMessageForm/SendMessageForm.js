@@ -5,7 +5,7 @@ import { useMutation } from "@apollo/client";
 import { gql } from "graphql-tag";
 import useForm from "../../lib/useForm";
 import formatPhone from "../../lib/formatPhone";
-import {ACCOUNT_QUERY} from '../../pages/account'
+import { ACCOUNT_QUERY } from "../../pages/account";
 
 const SEND_TEXT_MESSAGE_MUTATION = gql`
   mutation SEND_TEXT_MESSAGE_MUTATION($accountId: ID!, $textMessage: String!) {
@@ -34,7 +34,7 @@ export default function SendMessageForm({
       textMessage: inputs.message,
       accountId: accountId,
     },
-    refetchQueries: [{ query: ACCOUNT_QUERY }],
+    refetchQueries: [{ query: ACCOUNT_QUERY, variables: { id: accountId } }],
   });
 
   // need to send phone number + message to api
