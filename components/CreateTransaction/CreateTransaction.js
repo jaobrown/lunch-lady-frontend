@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import { useMutation, useQuery } from "@apollo/client";
 import useForm from "../../lib/useForm";
 import CurrencyInput from "../CurrencyInput/CurrencyInput";
+import { ACCOUNT_QUERY } from "../Account/Account";
 
 export const CREATE_TRANSACTION_MUTATION = gql`
   mutation CREATE_TRANSACTION_MUTATION($amount: Int!, $accountId: ID!) {
@@ -25,16 +26,7 @@ function CreateTransaction({ accountId }) {
   });
 
   const [createTransaction] = useMutation(CREATE_TRANSACTION_MUTATION, {
-    update(cache, { data: { createTransaction } }) {
-      cache.modify({
-        id: cache.identify(createTransaction.account.id),
-        fields: {
-          balance(cachedBalance) {
-            return cachedBalance + createTransaction.amount;
-          },
-        },
-      });
-    },
+    refetchQueries: [{ query: ACCOUNT_QUERY, variables: { id: accountId } }],
   });
 
   async function submit(e) {
@@ -55,13 +47,13 @@ function CreateTransaction({ accountId }) {
     <form onSubmit={submit} className="w-48">
       <div className="mt-1 flex focus-within:z-10 relative rounded-md shadow-sm">
         <div className="absolute inset-y-0 left-0 flex items-center">
-          <label htmlFor="action" className="sr-only">
+          <label htmlFor={`action-${accountId}`} className="sr-only">
             action
           </label>
           <select
             value={inputs.action}
             onChange={handleChange}
-            id="action"
+            id={`action-${accountId}`}
             name="action"
             className="focus:ring-blue-500 focus:border-blue-500 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
           >
@@ -72,7 +64,7 @@ function CreateTransaction({ accountId }) {
         <CurrencyInput
           type="text"
           name="amount"
-          id="amount"
+          id={`amount-${accountId}`}
           value={inputs.amount}
           onChange={handleChange}
           className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-16 sm:text-sm border-gray-300 rounded-l-md"

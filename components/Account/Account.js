@@ -224,6 +224,7 @@ export default function Account({ id }) {
                           rows={3}
                           className="shadow-sm block w-full focus:ring-blue-500 focus:border-blue-500 sm:text-sm border border-gray-300 rounded-md"
                           placeholder="Add a note"
+                          required
                           value={inputs.note}
                           onChange={handleChange}
                         />

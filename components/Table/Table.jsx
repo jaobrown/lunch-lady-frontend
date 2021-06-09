@@ -1,44 +1,10 @@
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useQuery } from "@apollo/client";
-import SendMessageForm from "../SendMessageForm/SendMessageForm";
-import { gql } from "graphql-tag";
-import formatPhone from "../../lib/formatPhone";
-import formatMoney from "../../lib/formatMoney";
 import dayjs from "dayjs";
-import { SortAscendingIcon } from "@heroicons/react/solid";
 import CreateTransaction from "../CreateTransaction/CreateTransaction";
+import SendMessageForm from "../SendMessageForm/SendMessageForm";
+import formatMoney from "../../lib/formatMoney";
 
-export const ALL_ACCOUNTS_QUERY = gql`
-  query ALL_ACCOUNTS_QUERY {
-    allAccounts(sortBy: [name_ASC]) {
-      id
-      name
-      phone
-      balance
-      needsTexted
-      dateLastTextSent
-    }
-  }
-`;
-
-export default function Table({ all }) {
-  const [showAll, setShowAll] = useState();
-  const { data, error, loading } = useQuery(ALL_ACCOUNTS_QUERY);
-  let accounts;
-
-  useEffect(() => {
-    setShowAll(all);
-  }, [all]);
-
-  if (error) return "An error has occurred: " + error.message;
-
-  if (showAll) {
-    accounts = data?.allAccounts;
-  } else {
-    accounts = data?.allAccounts.filter((account) => account.needsTexted);
-  }
-
+export default function Table({ loading, data }) {
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -85,7 +51,7 @@ export default function Table({ all }) {
                   </tr>
                 )}
                 {data &&
-                  accounts.map((account, accountIdx) => {
+                  data.map((account, accountIdx) => {
                     const lastMessaged =
                       account.dateLastTextSent === "—"
                         ? "—"
@@ -105,12 +71,12 @@ export default function Table({ all }) {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${
-                        account.balance < 0
-                          ? "bg-red-100 text-red-800"
-                          : "bg-green-100 text-green-800"
-                      }
-                      `}
+                              ${
+                                account.balance < 0
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-green-100 text-green-800"
+                              }
+                            `}
                           >
                             {formatMoney(account.balance)}
                           </span>

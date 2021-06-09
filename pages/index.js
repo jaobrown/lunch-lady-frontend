@@ -1,51 +1,73 @@
-import { Fragment, useState } from "react";
-import { Switch } from "@headlessui/react";
+import { Fragment, useEffect, useState } from "react";
+import { gql } from "graphql-tag";
+import { useQuery } from "@apollo/client";
+import { SearchIcon } from "@heroicons/react/solid";
 import Table from "../components/Table/Table";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+export const ALL_ACCOUNTS_QUERY = gql`
+  query ALL_ACCOUNTS_QUERY {
+    allAccounts(sortBy: [name_ASC]) {
+      id
+      name
+      phone
+      balance
+      needsTexted
+      dateLastTextSent
+    }
+  }
+`;
 
 export default function Home() {
-  const [enabled, setEnabled] = useState(true);
+  const [accounts, setAccounts] = useState([]);
+  const [q, setQ] = useState("");
+
+  const { data, error, loading } = useQuery(ALL_ACCOUNTS_QUERY);
+
+  useEffect(() => {
+    setAccounts(data?.allAccounts || []);
+  }, [data]);
+
+  function search(rows) {
+    return rows.filter((row) => row.name.toLowerCase().indexOf(q) > -1);
+  }
+
+  if (error) return "An error has occurred: " + error.message;
+
   return (
     <Fragment>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Account Balances
-        </h1>
-        <Switch.Group
-          as="div"
-          className="flex items-center justify-between flex-grow max-w-lg"
-        >
-          <Switch.Label as="span" className="flex-grow flex flex-col" passive>
-            <span className="text-sm font-medium text-gray-900">Show All</span>
-            <span className="text-sm text-gray-500">
-              By default, only people who need to be texted will be shown.
-            </span>
-          </Switch.Label>
-          <Switch
-            checked={enabled}
-            onChange={setEnabled}
-            className={classNames(
-              enabled ? "bg-blue-600" : "bg-gray-200",
-              "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex justify-between items-center">
+        <h1 className="text-2xl font-semibold text-gray-900">All Accounts</h1>
+        <div className="w-64">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 sr-only"
           >
-            <span className="sr-only">Filter</span>
-            <span
-              aria-hidden="true"
-              className={classNames(
-                enabled ? "translate-x-5" : "translate-x-0",
-                "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
-              )}
-            />
-          </Switch>
-        </Switch.Group>
+            Search
+          </label>
+          <div className="flex rounded-md shadow-sm">
+            <div className="relative flex items-stretch flex-grow focus-within:z-10">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <SearchIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              </div>
+              <input
+                type="text"
+                name="email"
+                id="email"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                className="focus:ring-blue-500 focus:border-blue-500 block text- w-full rounded-md pl-10 sm:text-sm border-gray-300"
+                placeholder="Jared Brown"
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="py-4">
-          <Table all={enabled} />
+          <Table loading={loading} data={search(accounts)} />
         </div>
       </div>
     </Fragment>
