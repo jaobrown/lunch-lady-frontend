@@ -6,6 +6,8 @@ import { gql } from "graphql-tag";
 import formatPhone from "../../lib/formatPhone";
 import formatMoney from "../../lib/formatMoney";
 import dayjs from "dayjs";
+import { SortAscendingIcon } from "@heroicons/react/solid";
+import CreateTransaction from "../CreateTransaction/CreateTransaction";
 
 export const ALL_ACCOUNTS_QUERY = gql`
   query ALL_ACCOUNTS_QUERY {
@@ -61,13 +63,13 @@ export default function Table({ all }) {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Phone
+                    Last Messaged
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    Last Messaged
+                    Add Transactions
                   </th>
                   <th scope="col" className="relative px-6 py-3">
                     <span className="sr-only">Message</span>
@@ -83,55 +85,59 @@ export default function Table({ all }) {
                   </tr>
                 )}
                 {data &&
-                  accounts.map((account, accountIdx) => (
-                    <tr
-                      key={`${account.name}-${accountIdx}`}
-                      className={
-                        accountIdx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      }
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <Link href={`/account/${account.id}`}>
-                          {account.name}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                  accounts.map((account, accountIdx) => {
+                    const lastMessaged =
+                      account.dateLastTextSent === "—"
+                        ? "—"
+                        : dayjs(account.dateLastTextSent).format("MMM DD");
+                    return (
+                      <tr
+                        key={`${account.name}-${accountIdx}`}
+                        className={
+                          accountIdx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                        }
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          <Link href={`/account/${account.id}`}>
+                            {account.name}
+                          </Link>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                       ${
                         account.balance < 0
                           ? "bg-red-100 text-red-800"
                           : "bg-green-100 text-green-800"
                       }
                       `}
-                        >
-                          {formatMoney(account.balance)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {formatPhone(account.phone)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {account.dateLastTextSent === "—"
-                          ? "—"
-                          : dayjs(account.dateLastTextSent).format("MMM DD")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        {account.phone && (
-                          <SendMessageForm
-                            family={account.name}
-                            phone={account.phone}
-                            dateLastTextSent={account.dateLastTextSent}
-                            initialMessage={"hello world"}
-                            accountId={account.id}
-                            needsTexted={account.needsTexted}
                           >
-                            Message
-                          </SendMessageForm>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                            {formatMoney(account.balance)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {lastMessaged}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <CreateTransaction accountId={account.id} />
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          {account.phone && (
+                            <SendMessageForm
+                              family={account.name}
+                              phone={account.phone}
+                              dateLastTextSent={account.dateLastTextSent}
+                              initialMessage={"hello world"}
+                              accountId={account.id}
+                              needsTexted={account.needsTexted}
+                            >
+                              Message
+                            </SendMessageForm>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
