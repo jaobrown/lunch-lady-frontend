@@ -43,8 +43,12 @@ export default function Account({ id }) {
 
   if (error) return "An error has occurred: " + error.message;
 
+  const message = data
+    ? `Hey, ${data.Account.name} family! You have a balance of ${formatMoney(data.Account.balance)}.`
+    : ``;
+
   return (
-    <Fragment>
+    <div className="py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
         <div className="flex items-center space-x-5">
           <div>
@@ -61,7 +65,7 @@ export default function Account({ id }) {
             dateLastTextSent={
               dayjs(data?.Account.dateLastTextSent).format("MMM DD") || "—"
             }
-            initialMessage={"hello world"}
+            initialMessage={message}
             accountId={data?.Account.id}
             needsTexted={data?.Account.phone ? true : false}
           >
@@ -90,6 +94,6 @@ export default function Account({ id }) {
           id={id}
         />
       </div>
-    </Fragment>
+    </div>
   );
 }
